@@ -3,7 +3,7 @@
 add_action('admin_menu','menuCrud');
 function menuCrud() {
 	add_menu_page(
-		__( 'Crud Sekolah' ), 			//page title
+		'Crud Sekolah', 				//page title
 		'Crud Sekolah', 				//menu title
 		'manage_options', 				//capability
 		'menu-crud',					//slug url
@@ -14,18 +14,38 @@ function menuCrud() {
 }
 
 function callbackCrud() {
-	$nama = isset($_POST['nama']) ? $_POST['nama'] : '';
-	$alamat = isset($_POST['alamat']) ? $_POST['alamat'] : '';
+		//Ambil Data Get Url ketika edit 
+		$act = isset($_GET['act']) ? $_GET['act'] : '';
+		$id = isset($_GET['id']) ? $_GET['id'] : '';
 
-	if(!empty($nama) && !empty ($alamat) ) {
+		//form submit
+		$nama = isset($_POST['nama']) ? $_POST['nama'] : '';
+		$alamat = isset($_POST['alamat']) ? $_POST['alamat'] : '';
 
-	$nama_table = 'sekolah';
-	$data = array(
-		'nama' => $nama,
-		'alamat' => $alamat,
-	);
+		if(!empty($nama) && !empty ($alamat) ) {
 
-	$insert = insert_data($nama_table,$data);
+		$nama_table = 'sekolah';
+		$data = array(
+			'nama' => $nama,
+			'alamat' => $alamat,
+		);
+
+		if( $act == 'edit') {
+			//update data
+			$where = array( 'id' => $id);
+			$update = update_data($nama_table,$data,$where);
+
+		if ($update) {
+			//alihkan kehalaman
+			$url_redirect = admin_url().'admin.php?page=menu-crud';
+			wp_redirect($url_redirect);
+			exit;
+		}
+	
+		}else{
+			//insert data
+			$insert = insert_data($nama_table,$data);
+		}
 	}
 
 include TEMP_DIR . 'tampil.php';

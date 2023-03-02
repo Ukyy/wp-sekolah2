@@ -16,19 +16,40 @@ function insert_data($nama_table,$data=array()) {
 	global $wpdb;
 	$table = $wpdb->prefix. $nama_table;
 	$wpdb->insert($table,$data);
-	$my_id = $wpdb->insert_id;
+	$id_insert = $wpdb->id_insert;
 	
-	return $insert_id;
+	return $id_insert;
 }
 
 //get row data
-function get_row_data($nama_table,  $andWhere="") {
+function get_row_data($nama_table,$andWhere) {
 
 	global $wpdb;
 	$table = $wpdb->prefix.$nama_table;
-	$sql = "SELECT * FROM ".$table." WHERE nis".$andWhere;
+	$sql = "SELECT * FROM ".$table." WHERE id=$andWhere";
 	$row = $wpdb->get_row( $sql );
 
 	return $row;
+}
+
+//hapus data
+function delete_data($nama_table,$id){
+	global $wpdb;
+	$table = $wpdb->prefix.$nama_table;
+	$delete = $wpdb->delete( $table, array( 'id' => $id ) );
+
+	return $delete;
+}
+
+
+//update database
+function update_data($nama_table,$data=array(),$where=array()){
+	global $wpdb;
+
+	$table = $wpdb->prefix.$nama_table;
+
+	$update = $wpdb->update($table, $data, $where);
+
+	return $update;
 }
 ?>
